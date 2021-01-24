@@ -5,22 +5,28 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TelephoneNumberMatcher {
+	private static String paragraph = "This is a sample string with multiple email."
+			+ " Contact Jane at 212 454 3332 to get more details about anything."
+			+ " Contact John at (212) 454-3334 to get more details about anything."
+			+ " Contact Colt at 212-454-333 to get more details about anything.";
 	public static void main(String[] args) throws Exception {
 		findValidManhattanPhoneNumbers();
 		findValidManhattanPhoneNumbersInAParagraph();
+		formatValidManhattanPhoneNumbersInAParagraph();
+	}
+	
+	public static void formatValidManhattanPhoneNumbersInAParagraph() {
+		String manhattanNumberPattern = "(.*?)(\\(?(212|332|646)\\)?[ -]?(\\d{3})[ -](\\d{4}))(.*?)";
+		String result = paragraph.replaceAll(manhattanNumberPattern, "$1($3) $4-$5");
+		StyledPrinter.print("Example: Format telephone numbers", result);
 	}
 
 	public static void findValidManhattanPhoneNumbersInAParagraph() throws Exception {
-		String paragraph = "This is a sample string with multiple email."
-				+ " Contact Jane at 212 454 3332 to get more details about anything."
-				+ " Contact John at (212) 454-3334 to get more details about anything."
-				+ " Contact Colt at 212-454-333 to get more details about anything.";
 		String manhattanNumberPattern = ".*?(\\(?(212|332|646)\\)?[ -]?(\\d{3})[ -](\\d{4})).*?";
 		StyledPrinter.printHeader("Example: Use parenthesis to group email parts");
 		Pattern pattern = Pattern.compile(manhattanNumberPattern, Pattern.CASE_INSENSITIVE);
 		Matcher matcher = pattern.matcher(paragraph);
 		while (matcher.find()) {
-			String completeTextIncludingPhoneNumber = matcher.group(0);
 			String phoneNumber = matcher.group(1);
 
 			System.out.println(phoneNumber);
